@@ -1,0 +1,105 @@
+﻿@using StudentManagement.Models
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@model StudentManagement.Models.Subject
+@using System.Linq;
+@{
+    List<Subject> listSubject = ViewBag.ListSubject;
+    int count = 0;
+    List<Feedback> listF = ViewBag.listF;
+    student_managementContext context = new student_managementContext();
+}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="home">Schedule</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+            <ul class="navbar-nav m-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="Student">Student Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="StudentProfile">Hello @ViewBag.Student.StudentName</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="Logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    <h2>
+                        List of feedbacks for @ViewBag.Student.StudentName (@ViewBag.Student.StudentCode)
+                    </h2>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>
+                                    GROUPNAME
+                                </th>
+                                <th>
+                                    LECTURER
+                                </th>
+                                <th>
+                                    SUBJECTS
+                                </th>
+                                <th>
+                                    DO FEEDBACK
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Subject item in listSubject)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Class.ClassName
+                                    </td>
+                                    <td>
+                                        @item.Lecturer.LecturerName
+                                    </td>
+                                    <td>
+                                        @item.SubjectCode
+
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.listCheck[count] == 1)
+                                        {
+                                            <a asp-controller="Student" asp-action="AddFeedback" asp-route-subjectId="@item.SubjectId" asp-route-lecturerId="@item.LecturerId">Add |</a>
+                                        }
+                                        else
+                                        {
+                                            if (DateTime.Compare(DateTime.Now, Convert.ToDateTime(context.Feedbacks.FirstOrDefault
+                                            (x => x.FeedbackId == listF[count].FeedbackId).FeedbackDate).AddDays(3)) < 0)
+
+                                            {
+                                                <a asp-controller="Student" asp-action="EditFeedback" asp-route-subjectId="@item.SubjectId" asp-route-lecturerId="@item.LecturerId">RETAKE |</a>
+                                                <a asp-controller="Student" asp-action="EditComment" asp-route-subjectId="@item.SubjectId" asp-route-lecturerId="@item.LecturerId">Edit Comment </a>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                count++;
+                            }
+                        </tbody>
+                    </table>
+                    <div>
+                    </div>
+
+                </div>
+            </div>
+</body>

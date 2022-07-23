@@ -1,0 +1,109 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using StudentManagement.Models;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home">Schedule</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Student">Student Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="StudentProfile">Hello @ViewBag.Student.StudentName</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    ViewData["Title"] = "Home Page";
+    <a asp-controller="Student" asp-action="StudentProfile">View Profile</a>
+    <h3 style="font-weight: bold">Update Profile</h3>
+    <form asp-controller="Student" asp-action="StudentUpdateProfile" method="post">
+        <table>
+            <tr>
+                <td>Avatar</td>
+                <td>
+                    <input type="file" name="image" value="@ViewBag.Student.StudentImg"><br>
+                    <img style="height: 100px; width: 100px" src="~/lib/img/@ViewBag.Student.StudentImg" />
+                </td>
+            </tr>
+            <tr hidden>
+                <td>Student ID</td>
+                <td><input type="text" name="id" value="@ViewBag.Student.StudentId" readonly /></td>
+            </tr>
+            <tr>
+                <td>Student Code</td>
+                <td><input type="text" name="code" value="@ViewBag.Student.StudentCode" readonly /></td>
+            </tr>
+            <tr>
+                <td>Student Name</td>
+                <td><input type="text" name="name" value="@ViewBag.Student.StudentName" /></td>
+                @if (@ViewBag.nameMess != null)
+                {
+                    <p style="color: red">@ViewBag.nameMess</p>
+                }
+            </tr>
+
+
+
+            <tr>
+                <td>Date of Birth</td>
+                <td><input type="date" name="dob" value="@ViewBag.Dateofbirth" /></td>
+            </tr>
+            <tr>
+                <td>Student Gender</td>
+                @if (@ViewBag.Student.StudentGender == true)
+                {
+                    <td>
+                        <input type="radio" name="gender" value="true" checked /> Male
+                        <input type="radio" name="gender" value="false"> Female
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <input type="radio" name="gender" value="true" /> Male
+                        <input type="radio" name="gender" value="false" checked /> Female
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="text" name="email" value="@ViewBag.Student.StudentEmail" /></td>
+                @if (@ViewBag.emailMess != null)
+                {
+                    <p style="color: red">@ViewBag.emailMess</p>
+                }
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><input type="text" name="address" value="@ViewBag.Student.StudentAddress" /></td>
+                @if (@ViewBag.addressMess != null)
+                {
+                    <p style="color: red">@ViewBag.addressMess</p>
+                }
+            </tr>
+            <tr>
+                <td><button>Save Change</button></td>
+            </tr>
+        </table>
+    </form>
+}

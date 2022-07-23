@@ -1,0 +1,86 @@
+﻿@model IEnumerable<StudentManagement.Models.StudentGrade>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="home">Schedule</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+            <ul class="navbar-nav m-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="Lecturer">Lecturer Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="LecturerProfile">Hello @ViewBag.Lecturer.LecturerName</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="Logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<form asp-controller="Marks" asp-action="Index">
+    <select onchange="this.form.submit()" name="subjectId">
+        <option>--Select Subject--</option>
+        @foreach (Subject subject in ViewBag.subjectList)
+        {
+            <option selected="@(ViewBag.subjectId == subject.SubjectId ? "selected" : null)" value="@subject.SubjectId">(@subject.SubjectCode) - @subject.Class.ClassName</option>
+        }
+
+    </select>
+
+</form>
+<br />
+
+
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Student.StudentId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Student.StudentCode)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Student.StudentName)
+                    </th>
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Student.StudentId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Student.StudentCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Student.StudentName)
+                        </td>
+
+                        <td>
+                            <a asp-action="ViewMark" asp-route-SubjectId="@item.Subject.SubjectId" asp-route-StudentId="@item.StudentId">View Mark</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+

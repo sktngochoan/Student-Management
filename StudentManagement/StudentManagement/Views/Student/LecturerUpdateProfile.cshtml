@@ -1,0 +1,74 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home">Schedule</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Lecturer">Lecturer Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="LecturerProfile">Hello @ViewBag.Lecturer.LecturerName</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    ViewData["Title"] = "Home Page";
+
+    <a asp-controller="Student" asp-action="LecturerProfile">View Profile</a>
+
+    <h3 style="font-weight: bold">Update Profile</h3>
+
+    <form asp-controller="Student" asp-action="LecturerUpdateProfile" method="post">
+        <table>
+            <tr>
+                <td>Avatar</td>
+                <td>
+                    <input type="file" name="image" value="@ViewBag.Lecturer.LecturerImg"><br>
+                    <img style="height: 100px; width: 100px" src="~/lib/img/@ViewBag.Lecturer.LecturerImg" />
+                </td>
+            </tr>
+            <tr hidden>
+                <td>Lecturer ID</td>
+                <td><input type="text" name="id" value="@ViewBag.Lecturer.LecturerId" readonly /></td>
+            </tr>
+            <tr>
+                <td>Lecturer Name</td>
+                <td><input type="text" name="name" value="@ViewBag.Lecturer.LecturerName" /></td>
+                @if (@ViewBag.nameMess != null)
+                {
+                    <p style="color: red">@ViewBag.nameMess</p>
+                }
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="text" name="email" value="@ViewBag.Lecturer.LecturerEmail" /></td>
+                @if (@ViewBag.emailMess != null)
+                {
+                    <p style="color: red">@ViewBag.emailMess</p>
+                }
+            </tr>
+            <tr>
+                <td><button>Save Change</button></td>
+            </tr>
+        </table>
+    </form>
+}

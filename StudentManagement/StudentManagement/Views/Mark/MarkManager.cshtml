@@ -1,0 +1,115 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using StudentManagement.Models
+@using StudentManagement
+@{
+    List<Subject> listSubject = ViewBag.subjectList;
+    Dictionary<int, List<StudentGrade>> map = ViewBag.map;
+}
+<form asp-controller="Mark" asp-action="MarkManager">
+    <select name="classId" onchange="this.form.submit()">
+        <option>--Select Class--</option>
+        @foreach (Subject subject in listSubject)
+        {
+            <option selected="@(ViewBag.classId == subject.Class.ClassId ? "selected" : null)" value="@subject.Class.ClassId">(@subject.SubjectCode) - @subject.Class.ClassName</option>
+        }
+    </select>
+
+</form>
+<br />
+<br />
+<div class="row">
+    <div class="col-md-6">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>
+                        Student ID
+                    </td>
+                    <td>
+                        Student Code
+                    </td>
+                    <td>
+                        Student Name
+                    </td>
+                    <td>
+                        Action
+                    </td>
+
+
+
+                </tr>
+            </thead>
+
+
+            <tbody>
+
+                @foreach (var item in map)
+                {
+                    <tr>
+                        @foreach (Student student in ViewBag.students)
+                        {
+                            @if (item.Key == student.StudentId)
+                            {
+                                <td>@student.StudentId</td>
+                                <td>@student.StudentName</td>
+                                <td>@student.StudentCode</td>
+                                <td><a asp-controller="Mark" asp-action="MarkManager"asp-route-classId="@student.ClassId" asp-route-studentId="@student.StudentId">View Mark</a></td>
+                            }
+
+                        }
+
+
+                    </tr>
+                }
+
+
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+    <div class="col-md-6">
+        <form asp-controller="Mark" asp-action="EditMark">
+            <table class="table">
+                <thead>
+                    <tr>
+                        @foreach (StudentGrade studentGrade in ViewBag.studentGrades1)
+                        {
+                            
+                            @foreach (Grade grade in ViewBag.gr)
+                            {
+                                @if (studentGrade.GradeId == grade.GradeId)
+                                {
+                                    <input type="hidden" name="gradeId" value="@grade.GradeId"/>
+                                    <input type="hidden" name="gradeCateId" value="@grade.GradeCategory.GradeCategoryId"/>
+                                    <td>@grade.GradeCategory.GradeCategoryName</td>
+                                    
+                                }
+                            }
+
+                        }
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach (StudentGrade item in ViewBag.listStudentGrade)
+                        {
+                            <input type="hidden" name="StudentId" value="@item.StudentId"/>
+                            <input type="hidden" name="SubjectId" value="@item.SubjectId"/>
+                            <td><input name="mark" type="text" value="@item.Value"/></td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+            <input type="submit" value="Edit" />
+        </form>
+
+    </div>
+</div>

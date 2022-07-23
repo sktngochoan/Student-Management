@@ -1,0 +1,97 @@
+﻿@using StudentManagement.Models
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@model StudentManagement.Models.Schedule
+@using System.Linq;
+@{
+    int count = 1;
+}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="home">Schedule</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+            <ul class="navbar-nav m-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="Lecturer">Lecturer Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="LecturerProfile">Hello @ViewBag.Lecturer.LecturerName</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="Logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<h3>Class Detail</h3>
+<div class="container-fluid">
+    <table class="table">
+        <thead>
+            <tr>
+                <td>
+                    INDEX
+                </td>
+                <td>
+                    IMAGE
+                </td>
+                <td>
+                    MEMBER
+                </td>
+                <td>
+                    CODE
+                </td>
+                <td>
+                    SURNAME
+                </td>
+                <td>
+                    MIDDLE NAME
+                </td>
+                <td>
+                    GIVEN NAME
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.student)
+            {
+                <tr>
+                <td>
+                    @count
+                </td>
+                <td>
+                    <img src="/lib/img/@item.StudentImg" width="90px" height="90px">
+                    
+                </td>
+                <td>
+                    @(item.StudentName.Split(" ")[2]+item.StudentCode)
+                </td>
+                <td>
+                    @item.StudentCode
+                </td>
+                
+                <td>
+                    @item.StudentName.Split(" ")[0]
+                </td>
+                <td>
+                    @item.StudentName.Split(" ")[1]
+                </td>
+                <td>
+                    @item.StudentName.Split(" ")[2]
+                </td>
+            </tr>
+            count++;
+            }
+        </tbody>
+    </table>
+</div>

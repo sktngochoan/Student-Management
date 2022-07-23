@@ -1,0 +1,140 @@
+﻿@using StudentManagement.Models
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@model StudentManagement.Models.Subject
+@using System.Linq;
+@{
+    Subject subject = ViewBag.Subject;
+}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="home">Schedule</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+            <ul class="navbar-nav m-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="Student">Student Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="StudentProfile">Hello @ViewBag.Student.StudentName</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Student" asp-action="Logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    <h2>Add Feedback</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div>
+                                Batch(Lớp):<a asp-controller="Student" asp-action="ClassDetail" asp-route-classId="@subject.ClassId">@subject.Class.ClassName</a>
+                            </div>
+                            <div>
+                                Subejct(Môn học):@subject.SubjectCode
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                Month(Tháng):5
+                            </div>
+                            <div>
+                                Teacher(Giảng viên):@subject.Lecturer.LecturerName
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form asp-controller="Student" asp-action="SaveFeedback">
+            <input  type="hidden" name="subjectId" value="@subject.SubjectId"/>
+            <input  type="hidden" name="lecturerId" value="@subject.LecturerId"/>
+            <div class="row">
+                <div><i style="font-weight:bold">Tick the phrase, which best suits the teacher (Đánh dấu vào ô thích hợp)</i></div>
+                <div style="border:1px solid black" class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span style="font-weight:bold">Regarding the teacher's punctuality</span><br />
+                            <i> (Sự đúng giờ của giảng viên trong giờ học)</i>
+                            <fieldset id="tb">
+                            <input required type="radio" value="4" name="tb"><span style="font-weight:bold">Always punctual (Luôn đúng giờ)</span><br />
+                            <input type="radio" value="3" name="tb"><span style="font-weight:bold">Mostly punctual (Phần lớn đúng giờ)</span><br />
+                            <input type="radio" value="2" name="tb"><span style="font-weight:bold">Rarely punctual (Ít khi đúng giờ)</span><br />
+                            <input type="radio" value="1" name="tb"><span style="font-weight:bold">Not at all punctual (Không bao giờ đúng giờ)</span>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <span style="font-weight:bold">Teaching skills of teacher</span><br />
+                             <i>
+                                 (Kỹ năng sư phạm của giảng viên)
+                             </i>
+                            <fieldset id="tsk">
+                            <input required type="radio" value="4" name="tsk"><span style="font-weight:bold">Very Good (Tốt)</span><br />
+                            <input type="radio" value="3" name="tsk"><span style="font-weight:bold">Good (Khá)</span><br />
+                            <input type="radio" value="2" name="tsk"><span style="font-weight:bold">Average (Trung bình)</span><br />
+                            <input type="radio" value="1" name="tsk"><span style="font-weight:bold">Poor (Kém)</span>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <span style="font-weight:bold">The teacher adequately covers the topics required by the syllabus</span><br />
+                            <i>
+                                (Đảm bảo khối lượng môn học theo chương trình)
+                            </i>
+                            <fieldset id="tac">
+                            <input required type="radio" value="4" name="tac"><span style="font-weight:bold">Fully covered (Đảm bảo hoàn toàn)</span><br />
+                            <input type="radio" value="3" name="tac"><span style="font-weight:bold">Mostly covered (Đảm bảo phần lớn)</span><br />
+                            <input type="radio" value="2" name="tac"><span style="font-weight:bold">Partially covered (Chỉ đảm bảo một phần)</span><br />
+                            <input type="radio" value="1" name="tac"><span style="font-weight:bold">Not at all covered (Không đảm bảo)</span>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <span style="font-weight:bold">Support from the teacher - guidance for practical exercises, answering questions out side of class</span><br />
+                              <i>
+                                  (Hỗ trợ của giảng viên trong và ngoài giờ - trả lời Email, hướng dẫn thực hành, giải đáp thắc mắc…)
+                              </i>
+                            <fieldset id="tsg">
+                            <input required type="radio" value="4" name="tsg"><span style="font-weight:bold">Very Good (Tốt)</span><br />
+                            <input type="radio" value="3" name="tsg"><span style="font-weight:bold">Good (Khá)</span><br />
+                            <input type="radio" value="2" name="tsg"><span style="font-weight:bold">Average (Trung bình)</span><br />
+                            <input type="radio" value="1" name="tsg"><span style="font-weight:bold">Poor (Kém)</span>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <span style="font-weight:bold">Teacher's response to student's questions in class</span><br />
+                              <i>
+                                  (Đáp ứng của giảng viên về những thắc mắc của học viên trong giờ học)
+                              </i>
+                            <fieldset id="trt">
+                            <input required type="radio" value="4" name="trt"><span style="font-weight:bold">Answered immediately or just after the session (Trả lời ngay hoặc trả lời vào cuối buổi học)</span><br />
+                            <input type="radio" value="3" name="trt"><span style="font-weight:bold">Answered in the next session (Trả lời vào buổi học sau)</span><br />
+                            <input type="radio" value="2" name="trt"><span style="font-weight:bold">Some queries left unanswered (Một số câu hỏi không được trả lời)</span><br />
+                            <input type="radio" value="1" name="trt"><span style="font-weight:bold">Most queries left unanswered (Phần lớn câu hỏi không được trả lời)</span>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:20px">
+                    <textarea required name="comment" style="width:475px;height:130px"></textarea>
+                </div>
+            </div>
+            <input style="margin-left:-15px" type="submit" value="Send Feedback"/>
+        </form>
+    </div>
+    
+</body>
+

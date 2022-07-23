@@ -1,0 +1,99 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using StudentManagement.Models
+@using StudentManagement
+@{
+    List<Subject> listSubject = ViewBag.subjectList;
+}
+<form>
+    <select>
+        <option>--Select Subject--</option>
+        @foreach (Subject subject in listSubject)
+        {
+            <option>(@subject.SubjectCode) - @subject.Class.ClassName</option>
+        }
+
+    </select>
+
+</form>
+<br />
+<br />
+<div class="col-md-12">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td>
+                    Student ID
+                </td>
+                <td>
+                    Student Code
+                </td>
+                <td>
+                    Student Name
+                </td>
+
+
+
+                @foreach (var item in ViewBag.GradeIdList)
+                {
+                    @foreach (Grade grade in ViewBag.grades)
+                    {
+                        @if (item == grade.GradeId)
+                        {
+                            <td>@grade.GradeCategory.GradeCategoryName</td>
+                        }
+                    }
+
+                }
+
+            </tr>
+        </thead>
+
+
+        <tbody>
+
+            @foreach (StudentGrade studentGrade1 in ViewBag.studentGrades2)
+            {
+                <tr>
+                    @foreach (Student student in ViewBag.students)
+                    {
+
+                        @if (studentGrade1.StudentId == student.StudentId)
+                        {
+                            <td>@studentGrade1.StudentId</td>
+                            <td>@student.StudentCode</td>
+                            <td>@student.StudentName</td>
+                            @foreach (var item in ViewBag.GradeIdList)
+                            {
+                                @foreach (Grade grade in ViewBag.grades)
+                                {
+                                    @if (item == grade.GradeId)
+                                    {
+                                        @if(studentGrade1.Value != null && studentGrade1.GradeId == item)
+                                        {
+                                             <td><input type="text" value="@studentGrade1.Value" /></td>     
+                                        }else{
+                                             <td><input type="text" /></td>
+                                        }
+                                       
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+
+
+                </tr>
+            }
+
+
+        </tbody>
+
+    </table>
+
+
+</div>

@@ -1,0 +1,238 @@
+﻿@using StudentManagement.Models
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@model StudentManagement.Models.Schedule
+@using System.Linq;
+@{
+    Dictionary<int, Dictionary<string, Schedule>> map = ViewBag.TimeTable;
+    List<StudentAttended> list = ViewBag.StudentAttendance;
+    int check = 0;
+    student_managementContext context = new student_managementContext();
+}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+@if (@ViewBag.role.ToString().Equals("1"))
+{
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home">Schedule</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Student">Student Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="StudentProfile">Hello @ViewBag.Student.StudentName</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+}
+else
+{
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home">Schedule</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Lecturer">Lecturer Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="LecturerProfile">Hello @ViewBag.Lecturer.LecturerName</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+}
+
+
+<h1>Activities for ...(HE151308)</h1>
+<div>
+    Rooms starting with AL belong to the Alpha building. VD: AL...<br />
+    Rooms starting with BE belong to the Beta building. Ex: BE,..<br />
+    Rooms starting with G belong to the Gamma building. Example: G201,...<br />
+    R-head training rooms in the Vovinam training ground area.<br />
+    Rooms starting with DE belong to the Delta building. Ex: DE,..<br />
+    Little UK (LUK) is on the 5th floor of Delta building
+</div>
+<div class="container-fluid">
+    <div class="timetable-img text-center">
+        <img src="img/content/timetable.png" alt="">
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr class="bg-light-gray">
+                    <th class="text-uppercase" rowspan="2">
+                        <form asp-controller="Student" asp-action="TimeTable" id="form">
+                            YEAR  <select>
+                                @for (int i = 2022; i >= 2019; i--)
+                                {
+                                    <option>@i</option>
+                                }
+                            </select><BR><br>
+                            WEEK  <select onchange="submit()" name="weekid">
+                                @foreach (var item in ViewBag.week)
+                                {
+                                    <option selected="@(item.WeekId == ViewBag.selectedWeek?"selected":null)" value="@item.WeekId">@item.WeekDate</option>
+                                }
+                            </select>
+                        </form>
+                    </th>
+                    <th class="text-uppercase">Monday</th>
+                    <th class="text-uppercase">Tuesday</th>
+                    <th class="text-uppercase">Wednesday</th>
+                    <th class="text-uppercase">Thursday</th>
+                    <th class="text-uppercase">Friday</th>
+                    <th class="text-uppercase">Saturday</th>
+                    <th class="text-uppercase">Sunday</th>
+                </tr>
+                <tr>
+                    @foreach (var date in ViewBag.Date)
+                    {
+                        <th class="text-uppercase">@date</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (@ViewBag.Count != 0)
+                {
+                    @foreach (Slot slot in ViewBag.slot)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                Slot @slot.SlotId
+                            </td>
+                            @if (map.ContainsKey(@slot.SlotId))
+                            {
+                                @foreach (String date in ViewBag.Date)
+                                {
+                                    @if (map.Values.ElementAt(@slot.SlotId - 1).ContainsKey(date))
+                                    {
+                                        <td>
+
+                                            <a asp-controller="Student" asp-action="ActivityDetail" asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
+                                                <b>@map[slot.SlotId][date].Subject.SubjectCode</b>
+                                            </a>
+                                            @if (@ViewBag.role.ToString().Equals("2") && @ViewBag.IsAttend == 1)
+                                            {
+                                                @if (@map[slot.SlotId][date].Status == false)
+                                                {
+                                                    <a asp-controller="Student" asp-action="Attendance" asp-route-classId=@map[slot.SlotId][date].ClassId asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
+                                                        <b>Attendance</b>
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    if (DateTime.Compare(DateTime.Now, Convert.ToDateTime(context.Schedules.FirstOrDefault
+                                                    (x => x.ScheduleId == @map[slot.SlotId][date].ScheduleId).ScheduleDate).AddDays(2)) < 0)
+                                                    {
+                                                        <br />
+                                                        <a style="color:green" asp-controller="Student" asp-action="EditAttendance" asp-route-classId=@map[slot.SlotId][date].ClassId asp-route-scheduleId=@map[slot.SlotId][date].ScheduleId>
+                                                            <b>Edit</b>
+                                                        </a>
+                                                    }
+                                                }
+                                            }
+                                            <div>
+                                                at
+                                                @map[slot.SlotId][date].Room.RoomName
+                                                <br>
+                                                @if (@ViewBag.role.ToString().Equals("1"))
+                                                {
+                                                    @if (ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 2)
+                                                    {
+                                                        <span style="color:green">Attend</span>
+                                                        check++;
+                                                    }
+                                                    else if (ViewBag.attend[@map[slot.SlotId][date].ScheduleId] == 1)
+                                                    {
+                                                        <span style="color:red">Absent</span>
+                                                        check++;
+                                                    }
+                                                    else
+                                                    {
+                                                        <span style="color:red">Not Yet</span>
+                                                        check++;
+                                                    }
+                                                }
+
+                                            </div>(@slot.SlotTime)<br>
+
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <div><b>-</b></div>
+                                        </td>
+                                    }
+                                    if (check < ViewBag.studentAttend.Count)
+                                    {
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            }
+                        </tr>
+                    }
+                }
+                else
+                {
+                    @foreach (Slot slot in ViewBag.slot)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                Slot @slot.SlotId
+                            </td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+        <div>
+            -More notes / Extra notes:<br />
+
+            *(attended): HoanNNHE151308 had attended this activity / Nguyen Ngoc Hoan attended this activity<br />
+            *(absent): HoanNNHE151308 had NOT attended this activity / Nguyen Ngoc Hoan was absent from this session<br />
+            *(-): no data was given / no data yet
+        </div>
+    </div>
+</div>

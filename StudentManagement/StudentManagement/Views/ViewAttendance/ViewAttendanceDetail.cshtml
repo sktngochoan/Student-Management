@@ -1,0 +1,92 @@
+﻿@using StudentManagement
+@using StudentManagement.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<StudentAttended>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home">Schedule</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Student">Student Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="StudentProfile">Hello @ViewBag.Student.StudentName</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div>
+        <h3>Course</h3>
+        <ul>
+            <form>
+                @foreach (Subject s in @ViewBag.listSubject)
+                {
+                <li>
+                    <a asp-controller="ViewAttendance" asp-action="ViewAttendanceDetail" asp-route-subjectId="@s.SubjectId">@s.SubjectName (@s.SubjectCode)</a>
+                </li>
+                }
+            </form>
+        </ul>
+    </div>
+    <div>
+        <h3>Report</h3>
+        <h5 style="font-weight: bold">Absent: @ViewBag.Percent % (@ViewBag.Absent on @ViewBag.Total total )</h5>
+        <table border="1px">
+
+            <tr style="font-weight: bold">
+                <td>Date</td>
+                <td>Slot</td>
+                <td>Room</td>
+                <td>Lecturer</td>
+                <td>Class Name</td>
+                <td>Attendance Status</td>
+            </tr>
+
+            @foreach (StudentAttended s in Model)
+            {
+                <tr>
+                    <td>@(((DateTime)s.Schedule.ScheduleDate).ToString("MM/dd/yyyy"))</td>
+                    <td>@s.Schedule.Slot.SlotId (@s.Schedule.Slot.SlotTime)</td>
+                    <td>@s.Schedule.Room.RoomName</td>
+                    <td>@s.Schedule.Lecturer.LecturerName</td>
+                    <td>@s.Schedule.Class.ClassName</td>
+                    @if (@s.StudentStatus == 2)
+                    {
+                        <td style="color: green">Attend</td>
+                    }
+                    else if (@s.StudentStatus == 1)
+                    {
+                        <td style="color: red">Absent</td>
+                    }
+                    else if (@s.StudentStatus == 3)
+                    {
+                        <td>Future</td>
+                    }
+                </tr>
+            }
+
+
+        </table>
+    </div>
+
+}

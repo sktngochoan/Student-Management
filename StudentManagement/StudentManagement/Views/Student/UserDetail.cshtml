@@ -1,0 +1,39 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@using StudentManagement.Models
+@model StudentManagement.Models.Student;
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+<h1>User detail</h1>
+<a asp-controller="Product" asp-action="AddtoCart" asp-route-id=@Model.StudentId>Course attendance</a> | 
+<a asp-controller="Product" asp-action="AddtoCart" asp-route-id=@Model.StudentId>Grade</a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div>
+                <h4>Login</h4>
+            </div>
+            <div>
+                <h4>Fullname</h4>
+            </div>
+            <div>
+                <h4>Image</h4>
+            </div>
+            <div>
+                <h4>Email</h4>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+
+</div>
